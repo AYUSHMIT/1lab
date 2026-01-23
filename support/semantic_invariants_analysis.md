@@ -20,9 +20,9 @@ This analysis focuses on semantic properties, not definitional content.
 ### Semantic Invariants
 
 #### Invariant 1.1: Category Laws Coherence
-- **Property**: Identity and associativity laws (`idr`, `idl`, `assoc`) must hold definitionally for base composition
-- **Encoding**: Explicit - required fields in `Precategory` record (from Cat.Base)
-- **Rationale**: 472 dependents assume these without re-checking; composition chains collapse without them
+- **Property**: Identity and associativity laws (`idr`, `idl`, `assoc`) are provided as equality proofs for base composition (i.e., as propositional, not definitional, equalities)
+- **Encoding**: Explicit - required equality fields in `Precategory` record (from Cat.Base)
+- **Rationale**: 472 dependents assume and use these laws without re-proving them; composition chains collapse without them
 
 **Breaking Example**: If `assoc` were weakened to hold only up to isomorphism:
 - **Downstream impact**: `Cat.Functor.Compose` would need explicit coherence data for triple compositions

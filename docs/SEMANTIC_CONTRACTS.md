@@ -6,9 +6,9 @@ Understanding these contracts is essential for contributors making changes to fo
 
 ## Contract 1: Category Laws Are Strict
 
-**What it guarantees**: All categories satisfy identity and associativity laws definitionally (as definitional equalities), not merely up to isomorphism.
+**What it guarantees**: All categories satisfy identity and associativity laws via propositional equality proofs (paths), not merely up to isomorphism.
 
-**Where encoded**: Structural — the `Precategory` record (in `Cat.Base`) requires `idr`, `idl`, and `assoc` fields that are strict equalities.
+**Where encoded**: Explicit — the `Precategory` record (in `Cat.Base`) requires `idr`, `idl`, and `assoc` fields that are propositional equality proofs.
 
 **What breaks if violated**: If category laws held only up to isomorphism (as in bicategories), then:
 - **Cat.Reasoning** (302 dependents): All reasoning combinators like `⟩∘⟨` would fail type-checking because they rely on strict associativity to chain compositions
@@ -39,9 +39,9 @@ Understanding these contracts is essential for contributors making changes to fo
 
 ## Contract 4: Functors Preserve Structure Strictly
 
-**What it guarantees**: Functors preserve identity (`F(id) ≡ id`) and composition (`F(f ∘ g) ≡ F(f) ∘ F(g)`) as definitional equalities.
+**What it guarantees**: Functors preserve identity (`F(id) ≡ id`) and composition (`F(f ∘ g) ≡ F(f) ∘ F(g)`) via propositional equality proofs (paths), not merely up to isomorphism.
 
-**Where encoded**: Explicit — the `Functor` record (in `Cat.Functor.Base`) has `F-id` and `F-∘` fields that are strict equality proofs.
+**Where encoded**: Explicit — the `Functor` record (in `Cat.Functor.Base`) has `F-id` and `F-∘` fields that are propositional equality proofs witnessing these laws.
 
 **What breaks if violated**: If functors only preserved structure up to natural isomorphism (lax functors):
 - **Cat.Functor.Reasoning** (83 dependents): All natural transformation constructions would require 2-cell coherence data

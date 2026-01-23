@@ -1,10 +1,10 @@
 # Agda Module Dependency Analysis
 
-This directory contains a tool for analyzing semantic dependencies between Agda modules in the 1lab repository.
+This directory contains a tool for analyzing module import dependencies between Agda modules in the 1lab repository.
 
 ## Tool: `analyze_dependencies.py`
 
-A Python script that traverses all Agda modules and produces a comprehensive semantic dependency map.
+A Python script that traverses all Agda modules and produces a comprehensive module import dependency map, based on `import`/`open import` statements and their transitive closure (with public imports used as a proxy for stronger conceptual coupling).
 
 ### Features
 

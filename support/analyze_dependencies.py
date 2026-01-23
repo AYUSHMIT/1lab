@@ -2,7 +2,7 @@
 """
 Agda Module Dependency Analyzer
 
-This script analyzes the semantic dependencies between Agda modules in the 1lab repository.
+This script analyzes module import dependencies between Agda modules in the 1lab repository.
 It identifies:
 - Foundational definitions (modules at the base of the dependency tree)
 - Hub concepts (modules referenced by many others)
@@ -13,9 +13,9 @@ It identifies:
 import os
 import re
 import sys
-from collections import defaultdict, deque
+from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Set, List, Tuple
+from typing import Dict, Set, List, Tuple, Any
 import argparse
 
 
@@ -156,9 +156,8 @@ class DependencyAnalyzer:
     
     def calculate_dependency_chains(self) -> Dict[str, int]:
         """Calculate the maximum dependency chain length for each module."""
-        # Use topological sort with dynamic programming
+        # Use depth-first search with memoization (dynamic programming) and simple cycle detection
         chain_lengths = {}
-        visited = set()
         
         def dfs(module_name: str, path: Set[str]) -> int:
             if module_name in chain_lengths:
@@ -190,7 +189,7 @@ class DependencyAnalyzer:
         
         return chain_lengths
     
-    def analyze_dependency_patterns(self) -> Dict[str, any]:
+    def analyze_dependency_patterns(self) -> Dict[str, Any]:
         """Analyze overall dependency patterns."""
         chain_lengths = self.calculate_dependency_chains()
         
@@ -317,6 +316,10 @@ class DependencyAnalyzer:
             
             chain_lengths = patterns['chain_lengths']
             
+            # Pre-compute sets for efficiency
+            foundational_set = {n for n, _ in foundational[:10]}
+            hub_set = {n for n, _ in hubs[:10]}
+            
             for module_name in important_modules:
                 if module_name not in self.modules:
                     continue
@@ -325,9 +328,7 @@ class DependencyAnalyzer:
                 category = module_name.split('.')[0]
                 color = category_colors.get(category, '#ffffff')
                 
-                # Determine if foundational/hub (using sets for efficient lookup)
-                foundational_set = {n for n, _ in foundational[:10]}
-                hub_set = {n for n, _ in hubs[:10]}
+                # Determine if foundational/hub (using pre-computed sets)
                 is_foundational = module_name in foundational_set
                 is_hub = module_name in hub_set
                 
@@ -368,8 +369,12 @@ class DependencyAnalyzer:
             f.write('    label="Legend";\n')
             f.write('    style=filled;\n')
             f.write('    color=lightgrey;\n')
-            f.write('    "Foundational\\nModule" [style=filled,fillcolor="#e8f4f8",shape=box];\n')
-            f.write('    "Hub\\nModule" [style=filled,fillcolor="#f8e8f0",shape=box];\n')
+            f.write('    // Hub/foundational status indicated by bold styling\n')
+            f.write('    "Hub/Foundational\\nModule" [shape=box,style="rounded,bold"];\n')
+            f.write('    // Node fill color indicates top-level category\n')
+            f.write('    "Category: 1Lab" [shape=box,style=rounded,fillcolor="#e8f4f8"];\n')
+            f.write('    "Category: Cat" [shape=box,style=rounded,fillcolor="#f8f0e8"];\n')
+            f.write('    "Category: Algebra" [shape=box,style=rounded,fillcolor="#e8f8f0"];\n')
             f.write('  }\n')
             
             f.write("}\n")
@@ -410,7 +415,7 @@ def main():
     
     # Generate reports
     output_dir = Path(args.output_dir)
-    output_dir.mkdir(exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
     
     md_report = output_dir / 'dependency_report.md'
     dot_graph = output_dir / 'dependency_graph.dot'

@@ -23,7 +23,7 @@ This PR adds dependency analysis tooling and documentation to make the library's
 3. **`CONTRIBUTING.md`** (modified): Added "Semantic Changes" section with a 7-item checklist for contributors modifying foundational modules
 
 ### Tooling
-4. **`support/analyze_dependencies.py`** (already exists): Python script that analyzes all Agda modules and generates:
+4. **`support/analyze_dependencies.py`** (new): Python script that analyzes all Agda modules and generates:
    - Dependency report with statistics
    - DOT graph visualization
    - Identifies foundational modules, hubs, and dependency chains
@@ -35,9 +35,9 @@ This PR adds dependency analysis tooling and documentation to make the library's
    - Does NOT enforce exact module counts to avoid brittleness
 
 ### Supporting Files
-6. **`support/semantic_invariants_analysis.md`** (already exists): Technical deep-dive with detailed invariant extraction for top 10 hub modules
-7. **`support/dependency_report.md`** (already exists): Generated statistics (716 modules, hub rankings, etc.)
-8. **`support/dependency_graph.dot`** (already exists): Visualization of 100 key modules
+6. **`support/semantic_invariants_analysis.md`** (new): Technical deep-dive with detailed invariant extraction for top 10 hub modules
+7. **`support/dependency_report.md`** (generated): Generated statistics (716 modules, hub rankings, etc.)
+8. **`support/dependency_graph.dot`** (generated): Visualization of 100 key modules
 
 ## Why It's Safe
 
