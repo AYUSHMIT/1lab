@@ -8,6 +8,16 @@ Homotopy Type Theory. Unlike the HoTT book, the 1lab is not a “linear”
 resource: Concepts are presented as a directed graph, with links
 indicating dependencies.
 
+## Semantic Contracts
+
+The 1lab codebase maintains fundamental semantic invariants that ensure
+mathematical correctness across its 700+ modules. These contracts specify
+how core structures (categories, paths, equivalences) must behave. Changes
+to foundational modules require extra care, as seemingly small modifications
+can silently break hundreds of dependents. See [`docs/SEMANTIC_CONTRACTS.md`](docs/SEMANTIC_CONTRACTS.md)
+for the complete list of guarantees and their implications.
+
+
 # Building
 
 Building the 1Lab is a rather complicated task, which has led to a lot
