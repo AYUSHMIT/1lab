@@ -93,7 +93,7 @@ The analyzer focuses on **meaning-level dependencies** by:
 
 ### Example Insights
 
-From analyzing the 1lab repository, the tool reveals:
+Example output from analyzing the 1lab repository (as of January 2026):
 
 **Foundational Modules** (depth 0-5):
 - `Prim.Type` - The most primitive module with 0 imports

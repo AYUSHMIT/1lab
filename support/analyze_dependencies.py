@@ -92,7 +92,8 @@ class DependencyAnalyzer:
                 content = self._extract_code_blocks(content)
             
             # Match import statements
-            # Pattern: "open import ModuleName" or "import ModuleName"
+            # Pattern matches: "open import ModuleName ..." or "import ModuleName ..."
+            # Captures the module name (word characters and dots)
             import_pattern = r'^\s*(?:open\s+)?import\s+([\w.]+)(?:\s+.*)?$'
             public_pattern = r'\bpublic\b'
             
@@ -166,9 +167,9 @@ class DependencyAnalyzer:
             if module_name not in self.modules:
                 return 0
             
-            # Detect cycles
+            # Detect cycles - return current depth for cyclic dependencies
             if module_name in path:
-                return 0
+                return 0  # Cycle detected, use 0 to avoid infinite recursion
             
             module = self.modules[module_name]
             path.add(module_name)
@@ -324,9 +325,11 @@ class DependencyAnalyzer:
                 category = module_name.split('.')[0]
                 color = category_colors.get(category, '#ffffff')
                 
-                # Determine if foundational/hub
-                is_foundational = module_name in [n for n, _ in foundational[:10]]
-                is_hub = module_name in [n for n, _ in hubs[:10]]
+                # Determine if foundational/hub (using sets for efficient lookup)
+                foundational_set = {n for n, _ in foundational[:10]}
+                hub_set = {n for n, _ in hubs[:10]}
+                is_foundational = module_name in foundational_set
+                is_hub = module_name in hub_set
                 
                 # Style based on importance
                 if is_foundational:

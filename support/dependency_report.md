@@ -76,21 +76,21 @@ Modules with the longest dependency chains:
 | `Cat.Instances.Sheaves` | 83 |
 | `Cat.Site.Instances.Atomic` | 83 |
 | `Cat.Site.Instances.Frame` | 83 |
+| `Cat.Site.Instances.Canonical` | 82 |
 | `Cat.Instances.Sheaf.Exponentials` | 82 |
 | `Cat.Instances.Sheaf.Omega` | 82 |
-| `Cat.Site.Instances.Canonical` | 82 |
 | `Cat.Site.Grothendieck` | 82 |
 | `index` | 81 |
-| `Cat.Instances.Sheaf.Limits.Finite` | 81 |
 | `Cat.Site.Closure` | 81 |
+| `Cat.Instances.Sheaf.Limits.Finite` | 81 |
 | `Cat.CartesianClosed.Free.Lambda` | 80 |
-| `Cat.Site.Sheafification` | 80 |
-| `Cat.Instances.Sheaf.Limits` | 80 |
 | `Cat.Site.Constructions` | 80 |
+| `Cat.Instances.Sheaf.Limits` | 80 |
+| `Cat.Site.Sheafification` | 80 |
 | `Cat.Total.Instances.Reflective` | 80 |
 | `Cat.Total.Instances.Set` | 80 |
-| `Cat.CartesianClosed.Free` | 79 |
 | `Cat.Bi.Instances.Relations` | 79 |
+| `Cat.CartesianClosed.Free` | 79 |
 | `Cat.Site.Base` | 79 |
 
 ## Module Organization
