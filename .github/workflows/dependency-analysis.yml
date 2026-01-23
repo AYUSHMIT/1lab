@@ -1,0 +1,67 @@
+name: Dependency Analysis
+
+on:
+  pull_request:
+    paths:
+      - 'src/**/*.agda'
+      - 'src/**/*.lagda.md'
+      - 'support/analyze_dependencies.py'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Run dependency analyzer
+        run: |
+          python3 support/analyze_dependencies.py --output-dir /tmp/analysis
+        
+      - name: Verify analysis outputs
+        run: |
+          # Check that module count is non-zero (parser didn't fail)
+          module_count=$(grep "Total modules analyzed:" /tmp/analysis/dependency_report.md | grep -oP '\d+' || echo "0")
+          if [ "$module_count" -eq 0 ]; then
+            echo "Error: Module count is 0. Parser may have failed."
+            exit 1
+          fi
+          echo "✓ Parsed $module_count modules successfully"
+          
+          # Verify report file was generated
+          if [ ! -f /tmp/analysis/dependency_report.md ]; then
+            echo "Error: dependency_report.md was not generated"
+            exit 1
+          fi
+          echo "✓ Dependency report generated"
+          
+          # Verify graph file was generated
+          if [ ! -f /tmp/analysis/dependency_graph.dot ]; then
+            echo "Error: dependency_graph.dot was not generated"
+            exit 1
+          fi
+          echo "✓ Dependency graph generated"
+          
+          # Basic validation that DOT file is well-formed
+          if ! grep -q "digraph AgdaDependencies" /tmp/analysis/dependency_graph.dot; then
+            echo "Error: DOT file does not appear to be valid"
+            exit 1
+          fi
+          echo "✓ DOT file appears well-formed"
+          
+          echo ""
+          echo "All dependency analysis checks passed!"
+      
+      - name: Upload analysis artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-analysis
+          path: /tmp/analysis/
+          retention-days: 7

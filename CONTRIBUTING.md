@@ -1084,3 +1084,44 @@ code that fits under "unfortunately, proof assistants":
 - Prelude/re-export modules.
 - Modules that simply define more convenient notations
   (e.g. `Algebra.Group.Notation`).
+
+## Semantic Changes
+
+When modifying foundational modules (especially hub modules like
+`Cat.Prelude`, `1Lab.Prelude`, `Cat.Base`, or anything in `Prim/`), you
+risk breaking semantic contracts that hundreds of downstream modules
+rely upon. Use this checklist to verify your changes are safe:
+
+- [ ] **Check dependency count**: Run `python3 support/analyze_dependencies.py`
+  and review `support/dependency_report.md`. If your module is a "hub"
+  (100+ dependents), exercise extreme caution.
+
+- [ ] **Verify categorical laws**: If modifying category-related code,
+  ensure identity and associativity laws remain definitional equalities,
+  not just propositional ones. Weakening to "up to isomorphism" breaks
+  302 modules that use `Cat.Reasoning`.
+
+- [ ] **Preserve h-level structure**: Do not change whether types are
+  propositions, sets, or groupoids. The h-level hierarchy is cumulative
+  and pervasive. Changes to `is-prop`, `is-set`, etc. affect hundreds of
+  closure lemmas.
+
+- [ ] **Maintain proof irrelevance**: All `is-*` predicates must remain
+  propositions. If you make `is-equiv`, `is-invertible`, or similar types
+  not propositional, univalence and categorical reasoning break.
+
+- [ ] **Respect displayed structure**: When working with displayed
+  categories, ensure displayed morphisms remain synchronized with base
+  morphisms via `PathP`. Breaking this makes Grothendieck constructions
+  invalid.
+
+- [ ] **Check strictness requirements**: Functors must preserve identity
+  and composition strictly (definitional equality). Weakening to natural
+  isomorphisms requires restructuring as bicategory theory.
+
+- [ ] **Test with dependents**: After changes to hub modules, build at
+  least 3-5 of their direct dependents to catch breakage early. The
+  dependency graph in `support/dependency_graph.dot` shows relationships.
+
+For details on what these contracts guarantee and why they matter, see
+[`docs/SEMANTIC_CONTRACTS.md`](docs/SEMANTIC_CONTRACTS.md).
